@@ -312,6 +312,61 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Partners & Clients */}
+      <section className="py-16 bg-secondary/50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="section-badge">Trusted By</span>
+            <h2 className="section-heading mt-6 text-2xl md:text-3xl">Our Partners & Clients</h2>
+            <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+              Proud to work with leading organizations across various industries
+            </p>
+          </div>
+          
+          {/* Scrolling Partners */}
+          <div className="relative overflow-hidden mb-8">
+            <div className="flex animate-marquee gap-8 items-center">
+              {[
+                { name: "TechCorp", logo: "TC" },
+                { name: "InnovateLab", logo: "IL" },
+                { name: "DataFlow Systems", logo: "DFS" },
+                { name: "CloudTech Solutions", logo: "CTS" },
+                { name: "Digital Dynamics", logo: "DD" },
+                { name: "FutureTech Inc", logo: "FTI" },
+                { name: "SmartBiz Pro", logo: "SBP" },
+                { name: "NextGen Analytics", logo: "NGA" },
+                { name: "WebCraft Studios", logo: "WCS" },
+                { name: "AI Innovations", logo: "AII" },
+                { name: "CodeMasters", logo: "CM" },
+                { name: "TechVision", logo: "TV" },
+                // Duplicate for seamless loop
+                { name: "TechCorp", logo: "TC" },
+                { name: "InnovateLab", logo: "IL" },
+                { name: "DataFlow Systems", logo: "DFS" },
+                { name: "CloudTech Solutions", logo: "CTS" },
+                { name: "Digital Dynamics", logo: "DD" },
+                { name: "FutureTech Inc", logo: "FTI" },
+              ].map((partner, index) => (
+                <div key={`${partner.name}-${index}`} className="flex-shrink-0 glass-card p-4 hover-lift group text-center min-w-[120px]">
+                  <div className="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center text-primary-foreground font-bold text-sm">
+                    {partner.logo}
+                  </div>
+                  <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+                    {partner.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              Join 20+ satisfied clients who trust Toko for their digital transformation
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Info */}
       <section className="py-24">
         <div className="container mx-auto px-6">

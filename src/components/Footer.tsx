@@ -44,8 +44,28 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-sm font-semibold uppercase tracking-wider text-foreground mb-6">Ecosystem</h4>
             <div className="space-y-3">
-              {["Toko Academy", "TokoPay", "Riba Africa", "Dinki Africa", "Bloom Shorts", "WhatsApp Scheduler Pro"].map((item) => (
-                <span key={item} className="block text-sm text-muted-foreground">{item}</span>
+              {[
+                { name: "Toko Academy", link: "https://tokoacademy.org", external: true },
+                { name: "Technologies", link: "/technologies", external: false },
+                { name: "TokoPay", link: null, external: false },
+                { name: "Riba Africa", link: null, external: false },
+                { name: "Dinki Africa", link: null, external: false },
+                { name: "Bloom Shorts", link: null, external: false },
+                { name: "WhatsApp Scheduler Pro", link: null, external: false }
+              ].map((item) => (
+                item.link ? (
+                  item.external ? (
+                    <a key={item.name} href={item.link} target="_blank" rel="noopener noreferrer" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {item.name}
+                    </a>
+                  ) : (
+                    <Link key={item.name} to={item.link} className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {item.name}
+                    </Link>
+                  )
+                ) : (
+                  <span key={item.name} className="block text-sm text-muted-foreground">{item.name}</span>
+                )
               ))}
             </div>
           </div>

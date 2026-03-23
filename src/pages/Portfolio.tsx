@@ -49,6 +49,108 @@ const Portfolio = () => {
         </div>
       </section>
 
+      {/* Client Testimonials & Partners */}
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <span className="section-badge">Client Success</span>
+            <h2 className="section-heading mt-6 text-3xl md:text-4xl">What Our Clients Say</h2>
+            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto text-lg">
+              Testimonials from organizations we've helped transform digitally
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {[
+              {
+                company: "TechCorp Solutions",
+                logo: "TC",
+                testimonial: "Toko transformed our digital presence with a custom web application that increased our efficiency by 40%.",
+                author: "Sarah Johnson",
+                role: "CTO"
+              },
+              {
+                company: "InnovateLab",
+                logo: "IL",
+                testimonial: "The mobile app developed by Tokotechnologies exceeded our expectations and delivered on time.",
+                author: "Michael Chen",
+                role: "Product Manager"
+              },
+              {
+                company: "DataFlow Systems",
+                logo: "DFS",
+                testimonial: "Their AI solutions helped us automate our processes and reduce operational costs significantly.",
+                author: "Emily Rodriguez",
+                role: "Operations Director"
+              },
+              {
+                company: "CloudTech Solutions",
+                logo: "CTS",
+                testimonial: "Professional team with deep technical expertise. They delivered a robust cloud infrastructure solution.",
+                author: "David Kim",
+                role: "Technical Lead"
+              },
+              {
+                company: "Digital Dynamics",
+                logo: "DD",
+                testimonial: "The e-commerce platform they built for us has driven a 60% increase in online sales.",
+                author: "Lisa Thompson",
+                role: "Marketing Director"
+              },
+              {
+                company: "FutureTech Inc",
+                logo: "FTI",
+                testimonial: "Excellent project management and communication throughout the development process.",
+                author: "James Wilson",
+                role: "CEO"
+              }
+            ].map((testimonial) => (
+              <div key={testimonial.company} className="glass-card p-8 hover-lift">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center text-primary-foreground font-bold text-sm">
+                    {testimonial.logo}
+                  </div>
+                  <div>
+                    <h4 className="font-display text-lg font-semibold text-foreground">{testimonial.company}</h4>
+                  </div>
+                </div>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6 italic">
+                  "{testimonial.testimonial}"
+                </p>
+                <div className="border-t border-border pt-4">
+                  <p className="text-sm font-medium text-foreground">{testimonial.author}</p>
+                  <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Partner Logos */}
+          <div className="text-center mb-12">
+            <h3 className="font-display text-xl font-semibold text-foreground mb-8">Trusted Partners</h3>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-6 items-center">
+              {[
+                { name: "AWS Partner", logo: "AWS" },
+                { name: "Google Cloud", logo: "GCP" },
+                { name: "Microsoft Azure", logo: "AZ" },
+                { name: "Stripe", logo: "ST" },
+                { name: "PayStack", logo: "PS" },
+                { name: "Vercel", logo: "VC" }
+              ].map((partner) => (
+                <div key={partner.name} className="glass-card p-4 hover-lift group text-center">
+                  <div className="w-12 h-12 mx-auto bg-gradient-to-br from-accent to-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-xs">
+                    {partner.logo}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2 group-hover:text-foreground transition-colors">
+                    {partner.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-24 bg-secondary text-center">
         <div className="container mx-auto px-6">
           <h2 className="section-heading">Have a Project in Mind?</h2>
