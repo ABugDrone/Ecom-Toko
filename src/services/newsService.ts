@@ -23,9 +23,21 @@ export interface NewsResponse {
 
 class NewsService {
   private baseUrl = 'https://tokoacademy.org';
+  private cache: { articles: NewsArticle[]; timestamp: number } | null = null;
+  private readonly CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 
-  async fetchNewsArticles(): Promise<NewsResponse> {
+  async fetchNewsArticles(forceRefresh = false): Promise<NewsResponse> {
     try {
+      // Check cache first (unless force refresh)
+      if (!forceRefresh && this.cache && Date.now() - this.cache.timestamp < this.CACHE_DURATION) {
+        console.log('Returning cached articles');
+        return {
+          articles: this.cache.articles,
+          total: this.cache.articles.length,
+          hasMore: false
+        };
+      }
+
       const articles: NewsArticle[] = [];
       
       // Fetch from different sections
@@ -55,14 +67,30 @@ class NewsService {
       // If no real data was fetched, return fallback data
       if (!hasRealData || articles.length === 0) {
         console.info('Using fallback articles due to fetch issues');
-        return this.getFallbackArticles();
+        const fallbackResponse = this.getFallbackArticles();
+        
+        // Cache fallback data
+        this.cache = {
+          articles: fallbackResponse.articles,
+          timestamp: Date.now()
+        };
+        
+        return fallbackResponse;
       }
 
       // Sort by date (most recent first)
       articles.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
 
+      const finalArticles = articles.slice(0, 20); // Limit to 20 most recent
+      
+      // Update cache
+      this.cache = {
+        articles: finalArticles,
+        timestamp: Date.now()
+      };
+
       return {
-        articles: articles.slice(0, 20), // Limit to 20 most recent
+        articles: finalArticles,
         total: articles.length,
         hasMore: articles.length > 20
       };

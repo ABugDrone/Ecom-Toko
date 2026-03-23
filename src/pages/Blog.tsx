@@ -1,10 +1,11 @@
 import Layout from "@/components/Layout";
 import { Calendar, User, ArrowRight, BookOpen, ExternalLink, RefreshCw } from "lucide-react";
 import { useNews } from "@/hooks/useNews";
+import { Toaster } from "@/components/ui/sonner";
 import companiesHeroImg from "@/assets/companies-hero.jpg";
 
 const Blog = () => {
-  const { articles, loading, error, refetch } = useNews();
+  const { articles, loading, error, refetch, lastUpdated } = useNews();
 
   const handleRefresh = async () => {
     await refetch();
@@ -15,6 +16,16 @@ const Blog = () => {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
+    });
+  };
+
+  const formatLastUpdated = (date: Date | null) => {
+    if (!date) return '';
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -31,6 +42,7 @@ const Blog = () => {
 
   return (
     <Layout>
+      <Toaster />
       <section className="relative py-24">
         <div className="absolute inset-0">
           <img src={companiesHeroImg} alt="Toko ecosystem" className="w-full h-full object-cover" />
@@ -44,6 +56,11 @@ const Blog = () => {
               <p className="mt-6 text-muted-foreground max-w-2xl text-lg">
                 Stay updated with the latest news, insights, and developments from the Toko Academy ecosystem.
               </p>
+              {lastUpdated && (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Last updated: {formatLastUpdated(lastUpdated)} • Auto-refreshes hourly
+                </p>
+              )}
             </div>
             <button
               onClick={handleRefresh}
