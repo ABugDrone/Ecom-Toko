@@ -1,15 +1,11 @@
 import Layout from "@/components/Layout";
-import { Calendar, User, ArrowRight, BookOpen, ExternalLink, RefreshCw } from "lucide-react";
+import { Calendar, User, ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import { useNews } from "@/hooks/useNews";
 import { Toaster } from "@/components/ui/sonner";
 import companiesHeroImg from "@/assets/companies-hero.jpg";
 
 const Blog = () => {
-  const { articles, loading, error, refetch, lastUpdated } = useNews();
-
-  const handleRefresh = async () => {
-    await refetch();
-  };
+  const { articles, loading, error, lastUpdated } = useNews();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -49,27 +45,17 @@ const Blog = () => {
           <div className="absolute inset-0 bg-background/85" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="section-badge">Blog</span>
-              <h1 className="section-heading mt-6 max-w-3xl">News & Insights</h1>
-              <p className="mt-6 text-muted-foreground max-w-2xl text-lg">
-                Stay updated with the latest news, insights, and developments from the Toko Academy ecosystem.
+          <div>
+            <span className="section-badge">Blog</span>
+            <h1 className="section-heading mt-6 max-w-3xl">News & Insights</h1>
+            <p className="mt-6 text-muted-foreground max-w-2xl text-lg">
+              Stay updated with the latest news, insights, and developments from the Toko Academy ecosystem.
+            </p>
+            {lastUpdated && (
+              <p className="mt-2 text-sm text-muted-foreground">
+                Last updated: {formatLastUpdated(lastUpdated)} • Auto-refreshes hourly
               </p>
-              {lastUpdated && (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Last updated: {formatLastUpdated(lastUpdated)} • Auto-refreshes hourly
-                </p>
-              )}
-            </div>
-            <button
-              onClick={handleRefresh}
-              disabled={loading}
-              className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </button>
+            )}
           </div>
         </div>
       </section>
@@ -79,7 +65,7 @@ const Blog = () => {
           {loading && (
             <div className="flex items-center justify-center py-12">
               <div className="flex items-center gap-3 text-muted-foreground">
-                <RefreshCw className="w-5 h-5 animate-spin" />
+                <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                 <span>Loading latest articles...</span>
               </div>
             </div>
@@ -88,12 +74,9 @@ const Blog = () => {
           {error && (
             <div className="glass-card p-8 text-center mb-8">
               <p className="text-red-400 mb-4">Failed to load articles: {error}</p>
-              <button
-                onClick={handleRefresh}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors"
-              >
-                Try Again
-              </button>
+              <p className="text-sm text-muted-foreground">
+                Articles will automatically refresh in the next hour, or you can refresh the page manually.
+              </p>
             </div>
           )}
 
