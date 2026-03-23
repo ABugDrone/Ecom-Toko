@@ -1,65 +1,34 @@
 import Layout from "@/components/Layout";
-import { Calendar, User, ArrowRight, BookOpen, Lightbulb, TrendingUp } from "lucide-react";
+import { Calendar, User, ArrowRight, BookOpen, ExternalLink, RefreshCw } from "lucide-react";
+import { useNews } from "@/hooks/useNews";
 import companiesHeroImg from "@/assets/companies-hero.jpg";
 
-const blogPosts = [
-  { 
-    title: "The Future of Digital Education in Africa", 
-    category: "Education", 
-    date: "March 15, 2026", 
-    author: "Toko Team",
-    excerpt: "Exploring how technology is transforming education across the African continent and the role of digital platforms in skill development.",
-    readTime: "5 min read",
-    color: "text-primary" 
-  },
-  { 
-    title: "Building Fintech Solutions for Emerging Markets", 
-    category: "Fintech", 
-    date: "March 10, 2026", 
-    author: "TokoPay Team",
-    excerpt: "How chat-based payment systems are revolutionizing financial inclusion in developing economies.",
-    readTime: "7 min read",
-    color: "text-accent" 
-  },
-  { 
-    title: "E-commerce Trends Shaping African Markets", 
-    category: "Commerce", 
-    date: "March 5, 2026", 
-    author: "Riba Africa",
-    excerpt: "Understanding the unique challenges and opportunities in African e-commerce and how platforms are adapting.",
-    readTime: "6 min read",
-    color: "text-primary" 
-  },
-  { 
-    title: "The Rise of Short-Form Content in Digital Marketing", 
-    category: "Media", 
-    date: "February 28, 2026", 
-    author: "Bloom Shorts",
-    excerpt: "How short-form video content is changing the way brands connect with audiences in the digital age.",
-    readTime: "4 min read",
-    color: "text-accent" 
-  },
-  { 
-    title: "Automation Tools for Small Business Growth", 
-    category: "SaaS", 
-    date: "February 20, 2026", 
-    author: "Toko Technologies",
-    excerpt: "Practical automation strategies that help small businesses scale efficiently without breaking the bank.",
-    readTime: "8 min read",
-    color: "text-primary" 
-  },
-  { 
-    title: "Tech Skills That Will Define the Next Decade", 
-    category: "Technology", 
-    date: "February 15, 2026", 
-    author: "Toko Academy",
-    excerpt: "A comprehensive look at the most in-demand technical skills and how to prepare for the future job market.",
-    readTime: "10 min read",
-    color: "text-accent" 
-  },
-];
-
 const Blog = () => {
+  const { articles, loading, error, refetch } = useNews();
+
+  const handleRefresh = async () => {
+    await refetch();
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors: { [key: string]: string } = {
+      'News': 'text-primary',
+      'Insights': 'text-accent',
+      'Bootcamps': 'text-blue-500',
+      'Workshops': 'text-green-500',
+      'Events': 'text-purple-500'
+    };
+    return colors[category] || 'text-primary';
+  };
+
   return (
     <Layout>
       <section className="relative py-24">
@@ -68,42 +37,139 @@ const Blog = () => {
           <div className="absolute inset-0 bg-background/85" />
         </div>
         <div className="container mx-auto px-6 relative z-10">
-          <span className="section-badge">Blog</span>
-          <h1 className="section-heading mt-6 max-w-3xl">Insights & Updates</h1>
-          <p className="mt-6 text-muted-foreground max-w-2xl text-lg">
-            Stay updated with the latest trends, insights, and developments from the Toko ecosystem.
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="section-badge">Blog</span>
+              <h1 className="section-heading mt-6 max-w-3xl">News & Insights</h1>
+              <p className="mt-6 text-muted-foreground max-w-2xl text-lg">
+                Stay updated with the latest news, insights, and developments from the Toko Academy ecosystem.
+              </p>
+            </div>
+            <button
+              onClick={handleRefresh}
+              disabled={loading}
+              className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+          </div>
         </div>
       </section>
 
       <section className="pb-24">
-        <div className="container mx-auto px-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogPosts.map((post) => (
-            <article key={post.title} className="glass-card p-8 hover-lift flex flex-col">
-              <div className="flex items-center gap-2 mb-4">
-                <BookOpen className={`${post.color}`} size={20} />
-                <span className="text-xs uppercase tracking-widest text-primary">{post.category}</span>
+        <div className="container mx-auto px-6">
+          {loading && (
+            <div className="flex items-center justify-center py-12">
+              <div className="flex items-center gap-3 text-muted-foreground">
+                <RefreshCw className="w-5 h-5 animate-spin" />
+                <span>Loading latest articles...</span>
               </div>
-              <h3 className="font-display text-xl font-bold text-foreground mb-3">{post.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed flex-1 mb-4">{post.excerpt}</p>
-              <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                <div className="flex items-center gap-2">
-                  <User size={14} />
-                  <span>{post.author}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar size={14} />
-                  <span>{post.date}</span>
-                </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="glass-card p-8 text-center mb-8">
+              <p className="text-red-400 mb-4">Failed to load articles: {error}</p>
+              <button
+                onClick={handleRefresh}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-sm hover:bg-primary/90 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && articles.length === 0 && (
+            <div className="glass-card p-8 text-center">
+              <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">No articles found. Please try again later.</p>
+            </div>
+          )}
+
+          {!loading && articles.length > 0 && (
+            <>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {articles.map((article) => (
+                  <article key={article.id} className="glass-card p-6 hover-lift flex flex-col group">
+                    {/* Article Image */}
+                    {article.imageUrl && (
+                      <div className="mb-4 overflow-hidden rounded-lg">
+                        <img
+                          src={article.imageUrl}
+                          alt={article.title}
+                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/placeholder-news.jpg';
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Category Badge */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <BookOpen className={`w-4 h-4 ${getCategoryColor(article.category)}`} />
+                      <span className={`text-xs uppercase tracking-widest ${getCategoryColor(article.category)}`}>
+                        {article.category}
+                      </span>
+                    </div>
+
+                    {/* Article Title */}
+                    <h3 className="font-display text-lg font-bold text-foreground mb-3 line-clamp-2">
+                      {article.title}
+                    </h3>
+
+                    {/* Article Excerpt */}
+                    <p className="text-muted-foreground text-sm leading-relaxed flex-1 mb-4 line-clamp-3">
+                      {article.excerpt}
+                    </p>
+
+                    {/* Article Meta */}
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <User size={12} />
+                          <span>{article.author}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar size={12} />
+                          <span>{formatDate(article.publishedDate)}</span>
+                        </div>
+                      </div>
+                      <span>{article.readTime}</span>
+                    </div>
+
+                    {/* Read More Link */}
+                    <div className="flex items-center justify-between">
+                      <a
+                        href={article.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:gap-3 transition-all group"
+                      >
+                        Read More 
+                        <ExternalLink size={14} className="group-hover:translate-x-1 transition-transform" />
+                      </a>
+                    </div>
+                  </article>
+                ))}
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">{post.readTime}</span>
-                <button className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:gap-3 transition-all">
-                  Read More <ArrowRight size={14} />
-                </button>
+
+              {/* Load More Section */}
+              <div className="text-center mt-12">
+                <a
+                  href="https://tokoacademy.org/news"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground font-medium rounded-sm hover:bg-primary/90 transition-colors"
+                >
+                  View All Articles on Toko Academy
+                  <ExternalLink size={16} />
+                </a>
               </div>
-            </article>
-          ))}
+            </>
+          )}
         </div>
       </section>
     </Layout>
